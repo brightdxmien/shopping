@@ -2,7 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:shopping_app/global_variable.dart';
 
 class ProductPage extends StatefulWidget {
-  ProductPage({super.key});
+  final String title;
+  final String price;
+  final String imageName;
+
+  ProductPage(
+      {super.key,
+      required this.title,
+      required this.imageName,
+      required this.price});
 
   @override
   _ProductPageState createState() => _ProductPageState();
@@ -19,95 +27,113 @@ class _ProductPageState extends State<ProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Details",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.normal,
+        appBar: AppBar(
+          title: Text(
+            'Details',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.normal,
+            ),
           ),
         ),
-      ),
-      body: Column(
-        children: [
+        body: Column(children: [
           Align(
             alignment: Alignment.center,
-            child: Text("Nike Shoes",
+            child: Text(widget.title,
                 style: Theme.of(context).textTheme.titleLarge),
           ),
           SizedBox(height: 40),
-          Image(image: AssetImage('assets/images/Shoes/shoe1.webp')),
+          Image(image: AssetImage(widget.imageName)),
           SizedBox(height: 40),
-          Text("\$$finPrice", style: Theme.of(context).textTheme.titleLarge),
+          Text("\$${widget.price}",
+              style: Theme.of(context).textTheme.titleLarge),
           SizedBox(height: 40),
 
           // Chips for sizes
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: finSize.map((size) {
-                final isSelected = selectedSizes
-                    .contains(size); // Check if the chip is selected
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                color: const Color.fromARGB(255, 255, 255, 255),
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: finSize.map((size) {
+                          final isSelected = selectedSizes
+                              .contains(size); // Check if the chip is selected
 
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 15.0), // Spacing between chips
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        if (isSelected) {
-                          selectedSizes
-                              .remove(size); // Remove from selected sizes
-                        } else {
-                          selectedSizes.add(size); // Add to selected sizes
-                        }
-                      });
-                    },
-                    child: Chip(
-                      label: Text(size),
-                      backgroundColor: isSelected
-                          ? Colors.blue
-                          : Colors.grey[200], // Change color based on selection
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15.0), // Spacing between chips
+                            child: GestureDetector(
+                              onTap: () {
+                                print(selectedSizes);
+                                setState(() {
+                                  if (isSelected) {
+                                    selectedSizes.remove(
+                                        size); // Remove from selected sizes
+                                  } else {
+                                    selectedSizes
+                                        .add(size); // Add to selected sizes
+                                  }
+                                });
+                              },
+                              child: Chip(
+                                label: Text(size),
+                                backgroundColor: isSelected
+                                    ? const Color.fromARGB(255, 255, 217, 30)
+                                    : Colors.grey[
+                                        200], // Change color based on selection
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
                       ),
                     ),
                   ),
-                );
-              }).toList(),
-            ),
-          ),
-          SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: GestureDetector(
-              onTap: () {
-                print("Add to Cart tapped with selected sizes: $selectedSizes");
-              },
-              child: Container(
-                height: 40,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.yellow,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(Icons.shopping_cart_checkout_outlined),
-                    SizedBox(width: 8), // Spacing between icon and text
-                    Text(
-                      "Add to Cart",
-                      style: Theme.of(context).textTheme.titleSmall,
+                  SizedBox(height: 50),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {});
+                        print(
+                            "Add to Cart tapped with selected sizes: $selectedSizes");
+                      },
+                      child: Container(
+                        height: 55,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 255, 217, 30),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(Icons.shopping_cart_checkout_outlined),
+                            SizedBox(width: 8), // Spacing between icon and text
+                            Text(
+                              "Add to Cart",
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          )
+        ]));
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:shopping_app/global_variable.dart';
 import 'package:shopping_app/product_cart.dart';
+import 'package:shopping_app/product_page.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -11,14 +12,27 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  late List<Map<String, dynamic>> filteredProducts;
+
   final FocusNode _focusNode = FocusNode();
   bool _isFocused = false;
   final List<String> filters = ['All', 'Nike', 'Converse', 'Adidas'];
   late String selectedFilter;
+  void applyFilter(String filter) {
+    setState(() {
+      if (filter == 'All') {
+        filteredProducts = products; // Show all products
+      } else {
+        filteredProducts =
+            products.where((product) => product['company'] == filter).toList();
+      }
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    filteredProducts = products;
     selectedFilter = filters[0];
     _focusNode.addListener(() {
       setState(() {
@@ -92,6 +106,7 @@ class _HomepageState extends State<Homepage> {
             SizedBox(
               height: 50,
               child: ListView.builder(
+                itemCount: filteredProducts.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
                   final filter = filters[index];
@@ -99,9 +114,12 @@ class _HomepageState extends State<Homepage> {
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: GestureDetector(
                       onTap: () {
-                        setState(() {});
-                        selectedFilter = filter;
-                        debugPrint(selectedFilter);
+                        setState(() {
+                          selectedFilter = filter;
+                          applyFilter(selectedFilter);
+
+                          debugPrint(selectedFilter);
+                        });
                       },
                       child: Chip(
                         backgroundColor: selectedFilter == filter
@@ -124,21 +142,33 @@ class _HomepageState extends State<Homepage> {
                     ),
                   );
                 },
-                itemCount: filters.length,
               ),
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: products.length,
+                itemCount: filteredProducts.length,
                 itemBuilder: (context, index) {
-                  final product = products[index];
+                  final product = filteredProducts[index];
+
                   return Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: ProductCart(
-                      imageName: product['imageurl'] as String,
-                      price: product['price'] as String,
-                      title: product["title"] as String,
-                      cardColor: Color.fromRGBO(255, 255, 255, 1),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProductPage(
+                                      title: product["title"] as String,
+                                      imageName: product['imageurl'] as String,
+                                      price: product['price'] as String,
+                                    )));
+                      },
+                      child: ProductCart(
+                        imageName: product['imageurl'] as String,
+                        price: product['price'] as String,
+                        title: product["title"] as String,
+                        cardColor: Color.fromRGBO(255, 255, 255, 1),
+                      ),
                     ),
                   );
                 },

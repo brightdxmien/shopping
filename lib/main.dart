@@ -33,7 +33,7 @@ class ShoppingApp extends StatelessWidget {
           ),
       darkTheme: ThemeData.light(),
       themeMode: ThemeMode.system,
-      home: ProductPage(),
+      home: Homepage(),
     );
   }
 }
