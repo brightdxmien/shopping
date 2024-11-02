@@ -198,7 +198,6 @@ class _HomepageState extends State<Homepage> {
                 color: Colors.black,
               ),
               onPressed: () {
-                addToCart();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
