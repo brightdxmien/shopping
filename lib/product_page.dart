@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_app/checkout.dart';
 import 'package:shopping_app/global_variable.dart';
+import 'package:shopping_app/homepage.dart';
 
 bool hasClearedCart = false;
 
@@ -184,6 +185,7 @@ class _ProductPageState extends State<ProductPage> {
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: GestureDetector(
                 onTap: () {
+                  autoClear();
                   // final item = cart[0];
                   // final title = item['title'] as String;
                   // final imageUrl = item['imageurl'] as String;

@@ -7,6 +7,17 @@ import 'package:shopping_app/checkout.dart';
 
 bool hasClearedCart = true;
 
+bool clearCart = false;
+
+void autoClear() {
+  if (!clearCart) {
+    cart.clear();
+    clearCart = true;
+  } else {
+    print("Did not clear cart");
+  }
+}
+
 void addToCart() {
   if (!hasClearedCart) {
     cart.clear();
@@ -63,7 +74,7 @@ class _HomepageState extends State<Homepage> {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      "Null\nCollection",
+                      "Boring\nCollection",
                       style: TextStyle(
                           fontSize: 40,
                           fontWeight: FontWeight.bold,
@@ -155,6 +166,10 @@ class _HomepageState extends State<Homepage> {
                   },
                 ),
               ),
+              SizedBox(
+                height: 5,
+              ),
+              Align(child: Text("Shoes for Boring White Men")),
               Expanded(
                 child: ListView.builder(
                   itemCount: filteredProducts.length,
@@ -198,6 +213,8 @@ class _HomepageState extends State<Homepage> {
                 color: Colors.black,
               ),
               onPressed: () {
+                autoClear();
+                setState(() {});
                 Navigator.push(
                   context,
                   MaterialPageRoute(
