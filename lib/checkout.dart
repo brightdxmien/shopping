@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_app/global_variable.dart';
 import 'package:shopping_app/homepage.dart';
+import 'package:shopping_app/loading.dart';
 import 'package:shopping_app/order.dart';
 
 class Checkout extends StatefulWidget {
@@ -20,16 +21,63 @@ class Checkout extends StatefulWidget {
 }
 
 class _CheckoutState extends State<Checkout> {
+  bool isLoading = false;
   final Color buttonColor = const Color.fromARGB(255, 255, 217, 30);
+
+  void startLoadingProcess() async {
+    setState(() => isLoading = true);
+
+    await Future.delayed(Duration(seconds: 2)); // Simulate a loading process
+
+    widget.cart.clear();
+    setState(() => isLoading = false);
+  }
+
+  void LoadingProcess(BuildContext context) async {
+    // Navigate to loading screen
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => LoadingScreen()),
+    );
+
+    await Future.delayed(Duration(seconds: 2)); // Simulate loading delay
+
+    widget.cart.clear(); // Clear the cart
+
+    // Navigate to the next screen after loading
+    Navigator.of(context).pop(); // Remove loading screen
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => Order()), // Next screen
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Scaffold(
+          body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(
+              color: buttonColor,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text("Clearing your cart...")
+          ],
+        ),
+      ));
+    }
+
     if (cart.isEmpty) {
       return Scaffold(
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text("Oops!, there's nothing in your cart"),
+            Text("Oops! there's nothing in your cart"),
             SizedBox(
               height: 20,
             ),
@@ -110,12 +158,7 @@ class _CheckoutState extends State<Checkout> {
                     ),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Order(),
-                          ),
-                        );
+                        LoadingProcess(context);
                       },
                       child: Container(
                         height: 55,
@@ -152,8 +195,8 @@ class _CheckoutState extends State<Checkout> {
                   color: Colors.black,
                 ),
                 onPressed: () {
-                  widget.cart.clear();
-                  setState(() {});
+                  startLoadingProcess();
+
                   // Define your onPressed functionality here
                 },
               ),

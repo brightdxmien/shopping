@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:shopping_app/checkout.dart';
+
 import 'package:shopping_app/homepage.dart';
-import 'package:shopping_app/order.dart';
-import 'package:shopping_app/product_page.dart';
-import 'package:shopping_app/global_variable.dart';
 
 void main() {
   runApp(const ShoppingApp());
